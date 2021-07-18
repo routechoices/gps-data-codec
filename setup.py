@@ -4,7 +4,7 @@ from setuptools import setup
 from setuptools_rust import Binding, RustExtension
 
 setup(
-    name="polyline_encoding_rust",
+    name="polyline-encoding-rust",
     version="1.0",
     rust_extensions=[RustExtension("polyline_encoding.polyline_encoding", binding=Binding.RustCPython)],
     packages=["polyline_encoding"],
