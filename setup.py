@@ -5,7 +5,7 @@ from setuptools_rust import Binding, RustExtension
 
 setup(
     name="polyline-encoding-rust",
-    version="1.0",
+    version="1.0.2",
     rust_extensions=[RustExtension("polyline_encoding.polyline_encoding", binding=Binding.RustCPython)],
     packages=["polyline_encoding"],
     # rust extensions are not zip safe, just like C-extensions.

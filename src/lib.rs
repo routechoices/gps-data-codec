@@ -1,6 +1,6 @@
 extern crate cpython;
 
-use cpython::{Python, PyResult, PyDict , PyList, py_module_initializer, py_fn};
+use cpython::{Python, PyErr, PyResult, PyDict , PyList, py_module_initializer, py_fn, exc};
 use std::char;
 
 
@@ -50,6 +50,9 @@ fn encode_data(_py: Python, data: &PyList) -> PyResult<String> {
     let mut result: String = "".to_owned();
     for py_pt in data.iter(_py) {
         let pt: PyDict = py_pt.extract(_py)?;
+        if !pt.contains(_py, "timestamp").unwrap() || !pt.contains(_py, "latitude").unwrap() || !pt.contains(_py, "longitude").unwrap() {
+            return Err(PyErr::new::<exc::ValueError, _>(_py, "invalid list of data points"));
+        }
         let tim: i64 = pt.get_item(_py, "timestamp").unwrap().extract(_py)?;
         let tim_d: i64 = tim - prev_t;
         let lat: f64 = pt.get_item(_py, "latitude").unwrap().extract(_py)?;
