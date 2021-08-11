@@ -48,13 +48,24 @@ fn encode_data(_py: Python, data: &PyList) -> PyResult<String> {
     let mut prev_lat: f64 = 0.0;
     let mut prev_lon: f64 = 0.0;
     let mut result: String = "".to_owned();
+    let mut first: bool = true;
     for py_pt in data.iter(_py) {
         let pt: PyDict = py_pt.extract(_py)?;
         if !pt.contains(_py, "timestamp").unwrap() || !pt.contains(_py, "latitude").unwrap() || !pt.contains(_py, "longitude").unwrap() {
-            return Err(PyErr::new::<exc::ValueError, _>(_py, "invalid list of data points"));
+            return Err(PyErr::new::<exc::ValueError, _>(_py, "invalid list, item does not contains a valid GPS data dict"));
         }
         let tim: i64 = pt.get_item(_py, "timestamp").unwrap().extract(_py)?;
         let tim_d: i64 = tim - prev_t;
+        if tim_d < 0 {
+            if first {
+                return Err(PyErr::new::<exc::ValueError, _>(_py, "invalid timestamp, should after 1st of January 2010"));
+            } else {
+                return Err(PyErr::new::<exc::ValueError, _>(_py, "invalid timestamp, list should be sorted by increasing timestamp"));
+            }
+        }
+        if first {
+            first = false;
+        }
         let lat: f64 = pt.get_item(_py, "latitude").unwrap().extract(_py)?;
         let lat_d: i64 = ((lat - prev_lat) * 1e5).round() as i64;
         let lon: f64 = pt.get_item(_py, "longitude").unwrap().extract(_py)?;

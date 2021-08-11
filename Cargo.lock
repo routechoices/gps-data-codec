@@ -58,7 +58,7 @@ checksum = "acbf547ad0c65e31259204bd90935776d1c693cec2f4ff7abb7a1bbbd40dfe58"
 
 [[package]]
 name = "pyext-polyline_encoding"
-version = "0.1.0"
+version = "1.0.3"
 dependencies = [
  "cpython",
 ]
