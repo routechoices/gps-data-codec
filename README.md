@@ -6,7 +6,7 @@ It is used to encode competitors data on https://www.routechoices.com
 ```
 >> import polyline_encoding
 >> polyline_encoding.encode_data([{'timestamp': 1628667993, 'latitude': 4.56543, 'longitude': -110.536214}])
-xipk|I}tzZhbtaT
+'qtaxyT}tzZhbtaT'
 ```
 
 # Warning:
