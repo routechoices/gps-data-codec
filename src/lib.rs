@@ -4,7 +4,7 @@ use cpython::{Python, PyErr, PyResult, PyDict , PyList, py_module_initializer, p
 use std::char;
 
 
-py_module_initializer!(polyline_encoding, |py, m| {
+py_module_initializer!(gps_encoding, |py, m| {
     m.add(py, "__doc__", "This module is implemented in Rust.")?;
     m.add(py, "encode_unsigned_number", py_fn!(py, encode_unsigned_number(num: i64)))?;
     m.add(py, "encode_signed_number", py_fn!(py, encode_signed_number(num: i64)))?;

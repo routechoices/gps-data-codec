@@ -1,11 +1,11 @@
 [package]
-name = "pyext-polyline_encoding"
+name = "pyext-gps_encoding"
 version = "1.1.0"
 edition = "2018"
 authors = ["Raphael Stefanini <raphael@rphlo.com>"]
 
 [lib]
-name = "polyline_encoding"
+name = "gps_encoding"
 crate-type = ["cdylib"]
 
 [dependencies.cpython]

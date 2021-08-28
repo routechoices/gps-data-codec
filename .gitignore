@@ -1,5 +1,5 @@
 build/
 dist/
-polyline-encoding-rust.egg-info/
+gps-encoding-rust.egg-info/
 __pycache__/
 *.pyc
