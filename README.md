@@ -11,4 +11,4 @@ xipk|I}tzZhbtaT
 
 # Warning:
   - As this is for GPS data it also encodes time data, so it is not compatible with google polylines.  
-  - Timestamp must be after 1st of January 2010, and the list must be sorted by increasing timestamps.
+  - The list of GPS points must be sorted by increasing timestamps.
