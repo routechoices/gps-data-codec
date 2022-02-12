@@ -1,6 +1,6 @@
 extern crate cpython;
 
-use cpython::{Python, PyErr, PyResult, PyDict, PythonObject, PyList, PyTuple, py_module_initializer, py_fn, exc};
+use cpython::{Python, PyErr, PyResult, PythonObject, PyList, PyTuple, PyFloat, py_module_initializer, py_fn, exc};
 use std::char;
 
 
@@ -71,10 +71,7 @@ pub fn decode_data(_py: Python, input: String) -> PyResult<PyList> {
             let new_val: i64 = vals[i] + r.result;
             vals[i] = new_val;
         }
-        let pt: PyDict = PyDict::new(_py);
-        pt.set_item(_py, "timestamp", vals[0] as f64);
-        pt.set_item(_py, "latitude", (vals[1] as f64) / 1e5);
-        pt.set_item(_py, "longitude", (vals[2] as f64) / 1e5);
+        let pt: PyTuple = PyTuple::new(_py, &[PyFloat::new(_py, vals[0] as f64).into_object(), PyFloat::new(_py, (vals[1] as f64) / 1e5).into_object(), PyFloat::new(_py, (vals[2] as f64) / 1e5).into_object()]);
         res.append(_py, pt.into_object());
     }
     Ok(res)
