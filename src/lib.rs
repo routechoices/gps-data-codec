@@ -112,8 +112,8 @@ fn encode_data(_py: Python, data: &PyList) -> PyResult<String> {
             return Err(PyErr::new::<exc::ValueError, _>(_py, "invalid list, item does not contains a valid GPS data array"));
         }
 
-        let tim: i64 = pt.get_item(_py, 0).extract(_py)?;
-        let tim_d: i64 = tim - prev_t;
+        let tim: f64 = pt.get_item(_py, 0).extract(_py)?;
+        let tim_d: i64 = tim.round() as i64 - prev_t;
         if is_first {
             result.push_str(&encode_signed_number(tim_d));
             is_first = false;
