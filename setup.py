@@ -4,7 +4,7 @@ from setuptools import setup
 from setuptools_rust import Binding, RustExtension
 
 setup(
-    name="gps-encoding-rust",
+    name="gps-encoding",
     version="1.2.0",
     rust_extensions=[RustExtension("gps_encoding.gps_encoding", binding=Binding.RustCPython)],
     packages=["gps_encoding"],
