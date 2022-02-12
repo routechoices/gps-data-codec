@@ -111,7 +111,7 @@ fn encode_data(_py: Python, data: &PyList) -> PyResult<String> {
     
     for py_pt in data.iter(_py) {
         let pt: PyTuple = py_pt.extract(_py)?;
-        if !pt.len(_py) != 3 {
+        if pt.len(_py) != 3 {
             return Err(PyErr::new::<exc::ValueError, _>(_py, "invalid list, item does not contains a valid GPS data array"));
         }
 
