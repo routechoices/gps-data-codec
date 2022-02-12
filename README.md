@@ -5,7 +5,7 @@ It is used to encode competitors data on https://www.routechoices.com
 
 ```
 >> import gps_encoding
->> gps_encoding.encode_data([[1628667993, 4.56543, -110.536214]]) # [[time, lat, lon], ...]
+>> gps_encoding.encode_data([(1628667993, 4.56543, -110.536214), ]) # [(time, lat, lon), ...]
 'qtaxyT}tzZhbtaT'
 ```
 
