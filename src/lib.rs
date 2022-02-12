@@ -110,12 +110,12 @@ fn encode_data(_py: Python, data: &PyList) -> PyResult<String> {
     let mut is_first: bool = true;
     
     for py_pt in data.iter(_py) {
-        let pt: PyDict = py_pt.extract(_py)?;
-        if !pt.contains(_py, "timestamp").unwrap() || !pt.contains(_py, "latitude").unwrap() || !pt.contains(_py, "longitude").unwrap() {
-            return Err(PyErr::new::<exc::ValueError, _>(_py, "invalid list, item does not contains a valid GPS data dict"));
+        let pt: PyList = py_pt.extract(_py)?;
+        if !pt.len(_py) != 3 {
+            return Err(PyErr::new::<exc::ValueError, _>(_py, "invalid list, item does not contains a valid GPS data array"));
         }
 
-        let tim: i64 = pt.get_item(_py, "timestamp").unwrap().extract(_py)?;
+        let tim: i64 = pt.get_item(_py, 0).extract(_py)?;
         let tim_d: i64 = tim - prev_t;
         if is_first {
             result.push_str(&encode_signed_number(tim_d));
@@ -126,11 +126,11 @@ fn encode_data(_py: Python, data: &PyList) -> PyResult<String> {
             result.push_str(&encode_unsigned_number(tim_d));
         }
 
-        let lat: f64 = pt.get_item(_py, "latitude").unwrap().extract(_py)?;
+        let lat: f64 = pt.get_item(_py, 1).extract(_py)?;
         let lat_d: i64 = ((lat - prev_lat) * 1e5).round() as i64;
         result.push_str(&encode_signed_number(lat_d));
 
-        let lon: f64 = pt.get_item(_py, "longitude").unwrap().extract(_py)?;
+        let lon: f64 = pt.get_item(_py, 2).extract(_py)?;
         let lon_d: i64 = ((lon - prev_lon) * 1e5).round() as i64;
         result.push_str(&encode_signed_number(lon_d));
 
