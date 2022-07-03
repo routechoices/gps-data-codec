@@ -1,5 +1,5 @@
-[![PyPi version](https://pypip.in/v/gps-encoding/badge.png)](https://crate.io/packages/gps-encoding/)
-[![PyPi downloads](https://pypip.in/d/gps-encoding/badge.png)](https://crate.io/packages/gps-encoding/)
+[![PyPi version](https://pypip.in/v/$REPO/badge.png)](https://crate.io/packages/$REPO/)
+[![PyPi downloads](https://pypip.in/d/$REPO/badge.png)](https://crate.io/packages/$REPO/)
 
 
 # gps_encoding
