@@ -1,3 +1,7 @@
+[![PyPi version](https://pypip.in/v/gps-encoding/badge.png)](https://crate.io/packages/gps-encoding/)
+[![PyPi downloads](https://pypip.in/d/gps-encoding/badge.png)](https://crate.io/packages/gps-encoding/)
+
+
 # gps_encoding
 
 Python library, implemented in rust, including base functions for encoding of gps data.  
