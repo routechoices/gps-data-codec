@@ -3,7 +3,7 @@ extern crate cpython;
 use cpython::{Python, PyErr, PyResult, PythonObject, PyList, PyTuple, PyFloat, py_module_initializer, py_fn, exc};
 
 
-py_module_initializer!(gps_encoding, |py, m| {
+py_module_initializer!(gps_encoding, initgps_encoding, PyInit_gps_encoding, |py, m| {
     m.add(py, "__doc__", "Encode/Decode GPS data")?;
     m.add(py, "encode_data", py_fn!(py, encode_data(data: &PyList)))?;
     m.add(py, "decode_data", py_fn!(py, decode_data(encoded: String)))?;

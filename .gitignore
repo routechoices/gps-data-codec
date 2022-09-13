@@ -1,6 +1,7 @@
 build/
 dist/
-gps-encoding-rust.egg-info/
+gps_encoding.egg-info/
 __pycache__/
 *.pyc
 env/
+target/
