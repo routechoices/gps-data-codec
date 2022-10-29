@@ -1,7 +1,7 @@
 [package]
 name = "gps_encoding"
-version = "1.4.1"
-edition = "2018"
+version = "1.5.0"
+edition = "2021"
 license = "MIT"
 authors = ["Raphael Stefanini <raphael@rphlo.com>"]
 classifier = ["Programming Language :: Python"]
