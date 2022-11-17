@@ -1,6 +1,6 @@
 [package]
 name = "gps_encoding"
-version = "1.5.1"
+version = "1.5.2"
 edition = "2021"
 license = "MIT"
 authors = ["Raphael Stefanini <raphael@rphlo.com>"]
@@ -15,7 +15,7 @@ name = "gps_encoding"
 crate-type = ["cdylib"]
 
 [dependencies.cpython]
-version = "0.7"
+version = "0.7.1"
 features = ["extension-module"]
 
 [package.metadata.maturin]

@@ -15,18 +15,15 @@ struct DecodingResult {
     consumed: u32,
 }
 
-fn decode_unsigned_value_from_string(encoded: &String, offset: u32) -> DecodingResult {
+fn decode_unsigned_value_from_string(encoded: &Vec<u8>, offset: u32) -> DecodingResult {
     let enc_len: u32 = encoded.len() as u32;
-    let mut i: u32 =0;
+    let mut i: u32 = 0;
     let mut s: u32 = 0;
     let mut result: i64 = 0;
     let mut b: u8 = 0x20;
-    let ptr: *const u8 = encoded.as_ptr();
     while b >= 0x20 && i + offset < enc_len {
         assert!(i + offset < enc_len);
-        unsafe {
-            b = *ptr.offset((i + offset) as isize) as u8 - 63;
-        }
+        b = encoded[(i + offset) as usize] - 63;
         i += 1;
         result |=  ((b & 0x1f) as i64) << s;
         s += 5;
@@ -34,8 +31,8 @@ fn decode_unsigned_value_from_string(encoded: &String, offset: u32) -> DecodingR
     return DecodingResult{result: result, consumed: i};
 }
 
-fn decode_signed_value_from_string(encoded: &String, offset: u32) -> DecodingResult {
-    let r: DecodingResult = decode_unsigned_value_from_string(&encoded, offset);
+fn decode_signed_value_from_string(encoded: &Vec<u8>, offset: u32) -> DecodingResult {
+    let r: DecodingResult = decode_unsigned_value_from_string(encoded, offset);
     let result: i64 = r.result;
     if result & 1 == 1 {
         return DecodingResult{result: !(result >> 1), consumed: r.consumed}
@@ -46,14 +43,13 @@ fn decode_signed_value_from_string(encoded: &String, offset: u32) -> DecodingRes
 
 pub fn decode_data(_py: Python, input: String) -> PyResult<PyList> {
     const YEAR2010: i64 = 1262304000;
-    let encoded: &String = &input;
+    let encoded: &Vec<u8> = &input.as_bytes().to_vec();
     let mut vals: Vec<i64> = vec![YEAR2010, 0, 0];
     let enc_len: u32 = encoded.len() as u32;
     let mut c: u32 = 0;
     let mut r: DecodingResult;
     let mut is_first: bool = true;
     let res: PyList = PyList::new(_py, &[]);
-
     while c < enc_len {
         for i in 0..3 {
             if i == 0 {

@@ -31,7 +31,7 @@ dependencies = [
 
 [[package]]
 name = "gps_encoding"
-version = "1.5.1"
+version = "1.5.2"
 dependencies = [
  "cpython",
 ]
