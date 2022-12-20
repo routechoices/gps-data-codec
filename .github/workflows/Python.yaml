@@ -16,6 +16,7 @@ jobs:
       with:
         python-version: '3.11'
     - name: Build wheels
+    - uses: dtolnay/rust-toolchain@stable
     - uses: PyO3/maturin-action@v1
       with:
         args: --release -i python3.11 --out dist
@@ -49,3 +50,4 @@ jobs:
         run: |
           pip install --upgrade twine
           twine upload --skip-existing *
+
