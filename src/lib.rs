@@ -66,7 +66,7 @@ pub fn decode_data(_py: Python, input: String) -> PyResult<PyList> {
             let new_val: i64 = vals[i] + r.result;
             vals[i] = new_val;
         }
-        let pt: PyTuple = PyTuple::new(_py, &[(vals[0] as u64).to_py_object(_py).into_object(), PyFloat::new(_py, (vals[1] as f64) / 1e5).into_object(), PyFloat::new(_py, (vals[2] as f64) / 1e5).into_object()]);
+        let pt: PyTuple = PyTuple::new(_py, &[(vals[0] as i64).to_py_object(_py).into_object(), PyFloat::new(_py, (vals[1] as f64) / 1e5).into_object(), PyFloat::new(_py, (vals[2] as f64) / 1e5).into_object()]);
         res.append(_py, pt.into_object());
     }
     Ok(res)
