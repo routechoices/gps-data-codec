@@ -11,16 +11,16 @@ jobs:
       matrix:
         target: [x86_64]
     steps:
-    - name: Build wheels
     - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
     - uses: dtolnay/rust-toolchain@stable
-    - uses: PyO3/maturin-action@v1
+    - name: Build wheels
+      uses: PyO3/maturin-action@v1
       with:
         command: build
         args: --release -i python3.11 --out dist
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
     - name: Install built wheel
       if: matrix.target == 'x86_64'
       run: |
@@ -51,4 +51,3 @@ jobs:
         run: |
           pip install --upgrade twine
           twine upload --skip-existing *
-
