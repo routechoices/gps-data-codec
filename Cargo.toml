@@ -1,17 +1,17 @@
 [package]
-name = "gps_encoding"
+name = "gps-data-codec"
 version = "1.5.4"
 edition = "2021"
 license = "MIT"
-authors = ["Raphael Stefanini <raphael@rphlo.com>"]
+authors = ["Raphael Stefanini <raphael@routechoices.com>"]
 classifier = ["Programming Language :: Python"]
-keywords = ["gps", "encode", "decode"]
+keywords = ["gps", "data", "encode", "decode"]
 readme = "README.md"
-homepage = "https://github.com/rphlo/gps_encoding"
-repository = "https://github.com/rphlo/gps_enoding.git"
+homepage = "https://github.com/routechoices/gps-data-codec"
+repository = "https://github.com/routechoices/gps-data-codec.git"
 
 [lib]
-name = "gps_encoding"
+name = "gps-data-codec"
 crate-type = ["cdylib"]
 
 [dependencies.cpython]
@@ -19,4 +19,4 @@ version = "0.7.1"
 features = ["extension-module"]
 
 [package.metadata.maturin]
-name = "gps_encoding"
+name = "gps-data-codec"
