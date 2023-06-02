@@ -11,7 +11,7 @@ homepage = "https://github.com/routechoices/gps-data-codec"
 repository = "https://github.com/routechoices/gps-data-codec.git"
 
 [lib]
-name = "gps-data-codec"
+name = "gps_data_codec"
 crate-type = ["cdylib"]
 
 [dependencies.cpython]
