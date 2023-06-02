@@ -12,9 +12,9 @@ pip install gps-data-codec
 
 ```
 >> import gps_data_codec
->> gps_data_codec.encode_data([(1628667993, 4.56543, -110.536214), ]) # [(time, lat, lon), ...]
+>> gps_data_codec.encode([(1628667993, 4.56543, -110.536214), ]) # [(time, lat, lon), ...]
 'qtaxyT}tzZhbtaT'
->> gps_data_codec.decode_data('qtaxyT}tzZhbtaT')
+>> gps_data_codec.decode('qtaxyT}tzZhbtaT')
 [(1628...
 ```
 
