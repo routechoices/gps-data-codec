@@ -24,7 +24,7 @@ jobs:
     - name: Install built wheel
       if: matrix.target == 'x86_64'
       run: |
-        pip install gps_encoding --no-index --find-links dist --force-reinstall
+        pip install gps_data_codec --no-index --find-links dist --force-reinstall
         python test.py
 
   release:
