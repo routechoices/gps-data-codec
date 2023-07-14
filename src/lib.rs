@@ -15,7 +15,7 @@ struct DecodingResult {
     consumed: u32,
 }
 
-fn decode_unsigned_value_from_string(encoded: &Vec<u8>, offset: u32) -> DecodingResult {
+fn decode_unsigned_value_from_string(encoded: &[u8], offset: u32) -> DecodingResult {
     let enc_len: u32 = encoded.len() as u32;
     let mut i: u32 = 0;
     let mut s: u32 = 0;
@@ -31,7 +31,7 @@ fn decode_unsigned_value_from_string(encoded: &Vec<u8>, offset: u32) -> Decoding
     return DecodingResult{result: result, consumed: i};
 }
 
-fn decode_signed_value_from_string(encoded: &Vec<u8>, offset: u32) -> DecodingResult {
+fn decode_signed_value_from_string(encoded: &[u8], offset: u32) -> DecodingResult {
     let r: DecodingResult = decode_unsigned_value_from_string(encoded, offset);
     let result: i64 = r.result;
     if result & 1 == 1 {
@@ -43,7 +43,7 @@ fn decode_signed_value_from_string(encoded: &Vec<u8>, offset: u32) -> DecodingRe
 
 pub fn decode_data(_py: Python, input: String) -> PyResult<PyList> {
     const YEAR2010: i64 = 1262304000;
-    let encoded: &Vec<u8> = &input.as_bytes().to_vec();
+    let encoded: &[u8] = &input.as_bytes();
     let mut vals: Vec<i64> = vec![YEAR2010, 0, 0];
     let enc_len: u32 = encoded.len() as u32;
     let mut c: u32 = 0;

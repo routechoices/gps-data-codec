@@ -1,10 +1,9 @@
 [package]
 name = "gps-data-codec"
-version = "1.5.5"
+version = "1.5.6"
 edition = "2021"
 license = "MIT"
 authors = ["Raphael Stefanini <raphael@routechoices.com>"]
-classifier = ["Programming Language :: Python"]
 keywords = ["gps", "data", "encode", "decode"]
 readme = "README.md"
 homepage = "https://github.com/routechoices/gps-data-codec"
