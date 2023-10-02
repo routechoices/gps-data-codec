@@ -1,14 +1,13 @@
-extern crate cpython;
+use pyo3::prelude::*;
+use pyo3::exceptions::PyValueError;
+use pyo3::types::{PyTuple, PyList};
 
-use cpython::{Python, PyErr, PyResult, PythonObject, PyList, PyTuple, PyFloat, ToPyObject, py_module_initializer, py_fn, exc};
-
-
-py_module_initializer!(gps_data_codec, initgps_data_codec, PyInit_gps_data_codec, |py, m| {
-    m.add(py, "__doc__", "Encode/Decode GPS data")?;
-    m.add(py, "encode", py_fn!(py, encode_data(data: &PyList)))?;
-    m.add(py, "decode", py_fn!(py, decode_data(encoded: String)))?;
+#[pymodule]
+fn gps_data_codec(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
+    m.add_function(wrap_pyfunction!(encode, m)?)?;
+    m.add_function(wrap_pyfunction!(decode, m)?)?;
     Ok(())
-});
+}
 
 struct DecodingResult {
     result: i64,
@@ -41,7 +40,8 @@ fn decode_signed_value_from_string(encoded: &[u8], offset: u32) -> DecodingResul
     }
 }
 
-pub fn decode_data(_py: Python, input: String) -> PyResult<PyList> {
+#[pyfunction]
+fn decode(_py: Python, input: String) -> PyResult<PyObject> {    
     const YEAR2010: i64 = 1262304000;
     let encoded: &[u8] = &input.as_bytes();
     let mut vals: Vec<i64> = vec![YEAR2010, 0, 0];
@@ -49,7 +49,7 @@ pub fn decode_data(_py: Python, input: String) -> PyResult<PyList> {
     let mut c: u32 = 0;
     let mut r: DecodingResult;
     let mut is_first: bool = true;
-    let res: PyList = PyList::new(_py, &[]);
+    let res: &PyList = PyList::empty(_py);
     while c < enc_len {
         for i in 0..3 {
             if i == 0 {
@@ -66,10 +66,10 @@ pub fn decode_data(_py: Python, input: String) -> PyResult<PyList> {
             let new_val: i64 = vals[i] + r.result;
             vals[i] = new_val;
         }
-        let pt: PyTuple = PyTuple::new(_py, &[(vals[0] as i64).to_py_object(_py).into_object(), PyFloat::new(_py, (vals[1] as f64) / 1e5).into_object(), PyFloat::new(_py, (vals[2] as f64) / 1e5).into_object()]);
-        res.append(_py, pt.into_object());
+        let pt: &PyTuple = PyTuple::new(_py, [(vals[0] as i64).to_object(_py), ((vals[1] as f64) / 1e5).to_object(_py), ((vals[2] as f64) / 1e5).to_object(_py)]);
+        res.append(pt)?;
     }
-    Ok(res)
+    Ok((*res).to_object(_py))
 }
 
 fn encode_unsigned_number(num: i64) -> Vec<u8>  {
@@ -91,7 +91,8 @@ fn encode_signed_number(num: i64) -> Vec<u8> {
     return encode_unsigned_number(sgn_num);
 }
 
-fn encode_data(_py: Python, data: &PyList) -> PyResult<String> {
+#[pyfunction]
+fn encode(_py: Python, data: &PyList) -> PyResult<String> {
     const YEAR2010: i64 = 1262304000;
     let mut prev_t: i64 = YEAR2010;
     let mut prev_lat: f64 = 0.0;
@@ -101,28 +102,28 @@ fn encode_data(_py: Python, data: &PyList) -> PyResult<String> {
     
     let mut is_first: bool = true;
     
-    for py_pt in data.iter(_py) {
-        let pt: PyTuple = py_pt.extract(_py)?;
-        if pt.len(_py) != 3 {
-            return Err(PyErr::new::<exc::ValueError, _>(_py, "invalid list, item does not contains a valid GPS data array"));
+    for py_pt in data.iter() {
+        let pt: Vec<PyObject> = py_pt.extract::<Vec<PyObject>>()?;
+        if pt.len() != 3 {
+            return Err(PyValueError::new_err("invalid list, item does not contains a valid GPS data array"));
         }
 
-        let tim: f64 = pt.get_item(_py, 0).extract(_py)?;
+        let tim: f64 = pt[0].extract::<f64>(_py)?;
         let tim_d: i64 = tim.round() as i64 - prev_t;
         if is_first {
             result.append(&mut encode_signed_number(tim_d));
             is_first = false;
         } else if tim_d < 0 {
-            return Err(PyErr::new::<exc::ValueError, _>(_py, "invalid timestamp, list should be sorted by increasing timestamp"));
+            return Err(PyValueError::new_err("invalid timestamp, list should be sorted by increasing timestamp"));
         } else {
             result.append(&mut encode_unsigned_number(tim_d));
         }
 
-        let lat: f64 = pt.get_item(_py, 1).extract(_py)?;
+        let lat: f64 = pt[1].extract::<f64>(_py)?;
         let lat_d: i64 = ((lat - prev_lat) * 1e5).round() as i64;
         result.append(&mut encode_signed_number(lat_d));
 
-        let lon: f64 = pt.get_item(_py, 2).extract(_py)?;
+        let lon: f64 = pt[2].extract::<f64>(_py)?;
         let lon_d: i64 = ((lon - prev_lon) * 1e5).round() as i64;
         result.append(&mut encode_signed_number(lon_d));
 

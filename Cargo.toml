@@ -1,6 +1,6 @@
 [package]
 name = "gps-data-codec"
-version = "1.5.6"
+version = "1.5.7"
 edition = "2021"
 license = "MIT"
 authors = ["Raphael Stefanini <raphael@routechoices.com>"]
@@ -13,8 +13,8 @@ repository = "https://github.com/routechoices/gps-data-codec.git"
 name = "gps_data_codec"
 crate-type = ["cdylib"]
 
-[dependencies.cpython]
-version = "0.7.1"
+[dependencies.pyo3]
+version = "0.19.2"
 features = ["extension-module"]
 
 [package.metadata.maturin]

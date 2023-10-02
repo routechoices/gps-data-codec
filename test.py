@@ -7,6 +7,8 @@ def test_lib():
     encoded = gps_data_codec.encode(input)
     assert(encoded == expected_encoded)
     output = gps_data_codec.decode(encoded)
+    print(output)
+    print(input)
     assert(output == input)
 
 
