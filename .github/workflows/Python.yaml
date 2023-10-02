@@ -17,7 +17,7 @@ jobs:
           build --release --compatibility manylinux_2_28 -i python3.11
     - uses: actions/setup-python@v4
       with:
-        python-version: '3.11'
+        python-version: '3.12'
     - name: Install built wheel
       run: |
         pip install gps_data_codec --no-index --find-links target/wheels --force-reinstall
