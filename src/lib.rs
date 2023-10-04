@@ -69,7 +69,7 @@ fn decode(_py: Python, input: String) -> PyResult<PyObject> {
         let pt: &PyTuple = PyTuple::new(_py, [(vals[0] as i64).to_object(_py), ((vals[1] as f64) / 1e5).to_object(_py), ((vals[2] as f64) / 1e5).to_object(_py)]);
         res.append(pt)?;
     }
-    Ok((*res).to_object(_py))
+    Ok(res.to_object(_py))
 }
 
 fn encode_unsigned_number(num: i64) -> Vec<u8>  {
