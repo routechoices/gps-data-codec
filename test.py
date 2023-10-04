@@ -7,18 +7,20 @@ def test_lib():
     encoded = gps_data_codec.encode(input)
     assert(encoded == expected_encoded)
     output = gps_data_codec.decode(encoded)
-    print(output)
-    print(input)
+    print("Before: ", input)
+    print("After: ", output)
     assert(output == input)
     import time
-    with open('in.txt', "r") as fp:
-        t0 = time.time()
+    with open('test_data.txt', "r") as fp:
         data = fp.read()
+        t0 = time.time()
         gps_data_codec.decode(data)
         t1 = time.time()
         gps_data_codec.decode(data)
         t2 = time.time()
-    print(t1 - t0, t2 - t1, t2 - t0)
+    print("Decoding: ", t1 - t0)
+    print("Encoding: ", t2 - t1)
+    print("Total: ", t2 - t0)
 
 if __name__ == "__main__":
     test_lib()
