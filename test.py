@@ -10,7 +10,15 @@ def test_lib():
     print(output)
     print(input)
     assert(output == input)
-
+    import time
+    with open('in.txt', "r") as fp:
+        t0 = time.time()
+        data = fp.read()
+        gps_data_codec.decode(data)
+        t1 = time.time()
+        gps_data_codec.decode(data)
+        t2 = time.time()
+    print(t1 - t0, t2 - t1, t2 - t0)
 
 if __name__ == "__main__":
     test_lib()

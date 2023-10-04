@@ -103,12 +103,12 @@ fn encode(_py: Python, data: &PyList) -> PyResult<String> {
     let mut is_first: bool = true;
     
     for py_pt in data.iter() {
-        let pt: Vec<PyObject> = py_pt.extract::<Vec<PyObject>>()?;
+        let pt: &PyTuple = py_pt.downcast::<PyTuple>()?;
         if pt.len() != 3 {
             return Err(PyValueError::new_err("invalid list, item does not contains a valid GPS data array"));
         }
 
-        let tim: f64 = pt[0].extract::<f64>(_py)?;
+        let tim: f64 = pt[0].extract::<f64>()?;
         let tim_d: i64 = tim.round() as i64 - prev_t;
         if is_first {
             result.append(&mut encode_signed_number(tim_d));
@@ -119,11 +119,11 @@ fn encode(_py: Python, data: &PyList) -> PyResult<String> {
             result.append(&mut encode_unsigned_number(tim_d));
         }
 
-        let lat: f64 = pt[1].extract::<f64>(_py)?;
+        let lat: f64 = pt[1].extract::<f64>()?;
         let lat_d: i64 = ((lat - prev_lat) * 1e5).round() as i64;
         result.append(&mut encode_signed_number(lat_d));
 
-        let lon: f64 = pt[2].extract::<f64>(_py)?;
+        let lon: f64 = pt[2].extract::<f64>()?;
         let lon_d: i64 = ((lon - prev_lon) * 1e5).round() as i64;
         result.append(&mut encode_signed_number(lon_d));
 
