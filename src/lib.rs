@@ -1,6 +1,5 @@
 use pyo3::prelude::*;
-use pyo3::exceptions::PyValueError;
-use pyo3::types::{PyList};
+use pyo3::types::{PyList, PyTuple};
 
 struct DecodingResult {
     value: i64,
@@ -66,9 +65,13 @@ fn decode(input: String) -> PyResult<Vec<(i64, f64, f64)>> {
     let encoded: &[u8] = &input.as_bytes();
     let encoded_length: u32 = encoded.len() as u32;
     let mut output: Vec<(i64, f64, f64)> = Vec::new();
+    
+    let mut is_first: bool = true;
+
     while bytes_consumed < encoded_length {
-        if bytes_consumed == 0 {
+        if is_first {
             decoding_result = decode_signed_value_from_string(encoded, bytes_consumed);
+            is_first = false
         } else {
             decoding_result = decode_unsigned_value_from_string(encoded, bytes_consumed);
         }
@@ -95,39 +98,37 @@ fn decode(input: String) -> PyResult<Vec<(i64, f64, f64)>> {
 }
 
 #[pyfunction]
-fn encode(_py: Python, data: &PyList) -> PyResult<String> {
+fn encode(data: &PyList) -> PyResult<String> {
     let mut prev_timestamp: i64 = YEAR2010;
     let mut prev_latitude: f64 = 0.0;
     let mut prev_longitude: f64 = 0.0;
 
     let mut output: Vec<u8> = vec![];
+    let mut is_first: bool = true;
 
-    for (point_count, point_object) in data.iter().enumerate() {
-        if let Ok(point_data) = point_object.extract::<(f64, f64, f64)>() {
-            let timestamp: f64 = point_data.0;
-            let timestamp_diff: i64 = timestamp.round() as i64 - prev_timestamp;
-            if point_count == 0 {
-                output.append(&mut encode_signed_number(timestamp_diff));
-            } else if timestamp_diff >= 0 {
-                output.append(&mut encode_unsigned_number(timestamp_diff));
-            } else {
-                return Err(PyValueError::new_err("invalid timestamp, list should be sorted by increasing timestamp"));
-            }
+    for point_object in data.iter() {
+        let point_data = point_object.downcast::<PyTuple>()?;
+        let timestamp: f64 = point_data[0].extract::<f64>()?;
+        let timestamp_diff: i64 = timestamp.round() as i64 - prev_timestamp;
+        if is_first {
+            output.append(&mut encode_signed_number(timestamp_diff));
+            is_first = false;
+        }else {
+            output.append(&mut encode_unsigned_number(timestamp_diff));
+        }
+        
+        let latitude: f64 = point_data[1].extract::<f64>()?;
+        let latitude_diff: i64 = ((latitude - prev_latitude) * 1e5).round() as i64;
+        output.append(&mut encode_signed_number(latitude_diff));
 
-            let latitude: f64 = point_data.1;
-            let latitude_diff: i64 = ((latitude - prev_latitude) * 1e5).round() as i64;
-            output.append(&mut encode_signed_number(latitude_diff));
+        let longitude: f64 = point_data[2].extract::<f64>()?;
+        let longitude_diff: i64 = ((longitude - prev_longitude) * 1e5).round() as i64;
+        output.append(&mut encode_signed_number(longitude_diff));
 
-            let longitude: f64 = point_data.2;
-            let longitude_diff: i64 = ((longitude - prev_longitude) * 1e5).round() as i64;
-            output.append(&mut encode_signed_number(longitude_diff));
-
-            prev_timestamp += timestamp_diff;
-            prev_latitude += (latitude_diff as f64) / 1e5;
-            prev_longitude += (longitude_diff as f64) / 1e5;
-        } else {
-            return Err(PyValueError::new_err("invalid list, item does not contains a valid GPS data array"));
-        }        
+        prev_timestamp += timestamp_diff;
+        prev_latitude += (latitude_diff as f64) / 1e5;
+        prev_longitude += (longitude_diff as f64) / 1e5;
+   
     }
     Ok(String::from_utf8(output).unwrap())
 }

@@ -1,6 +1,6 @@
 import gps_data_codec
 
-import polyline
+import py_gps_data_codec
 
 def test_lib():
     input = [(-1,0,0),(1628667993, 4.56543, -110.53621), (1628667994, 4.56553, -110.53625)]
@@ -15,18 +15,19 @@ def test_lib():
     t0 = time.time()
     x1 = gps_data_codec.decode(data)
     t1 = time.time()
-    gps_data_codec.encode(x1)
+    s1 = gps_data_codec.encode(x1)
     t2 = time.time()
     print("-- Rust --")
     print("Decoding: ", t1 - t0)
     print("Encoding: ", t2 - t1)
     print("Total: ", t2 - t0)
     t0 = time.time()
-    x2 = polyline.decode(data)
-    assert(x1 == x2)
+    x2 = py_gps_data_codec.decode(data)
     t1 = time.time()
-    polyline.encode(x1)
+    s2 = py_gps_data_codec.encode(x1)
     t2 = time.time()
+    assert(x1 == x2)
+    assert(s1 == s2)
     print("-- Python --")
     print("Decoding: ", t1 - t0)
     print("Encoding: ", t2 - t1)

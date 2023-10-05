@@ -2,8 +2,6 @@
 A Python implementation of Google's Encoded Polyline Algorithm Format.
 """
 import io
-import itertools
-import math
 
 
 YEAR2010 = 1262304000
@@ -13,6 +11,7 @@ def _write_unsigned(output, num):
         output.write(chr((0x20 | (num & 0x1f)) + 63))
         num >>= 5
     output.write(chr(num + 63))
+
 
 def _write_signed(output, num):
     sgn_num = num << 1
@@ -81,7 +80,7 @@ def encode(coordinates):
     p_la = 0
     p_lo = 0
     for i, curr in enumerate(coordinates):
-        t_d = round(curr[0]) - p_t
+        t_d = round(curr[0] - p_t)
         if i == 0:
             _write_signed(output, t_d)
         else:
@@ -92,8 +91,8 @@ def encode(coordinates):
         _write_signed(output, la_d)
         p_la += la_d / 1e5
         
-        lo_d = round((curr[1] - p_lo) * 1e5)
+        lo_d = round((curr[2] - p_lo) * 1e5)
         _write_signed(output, lo_d)
-        p_lo += la_d / 1e5
-        
+        p_lo += lo_d / 1e5
+
     return output.getvalue()
