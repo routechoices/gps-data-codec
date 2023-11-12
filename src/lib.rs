@@ -130,7 +130,7 @@ fn encode(data: &PyList) -> PyResult<String> {
         prev_longitude += (longitude_diff as f64) / 1e5;
    
     }
-    Ok(String::from_utf8(output).unwrap())
+    Ok(unsafe {String::from_utf8_unchecked(output)})
 }
 
 #[pymodule]
